@@ -1,0 +1,60 @@
+package rest.menu.outlet;
+
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.InvalidOperation;
+
+import rest.textui.UnknownKeyException;
+import rest.textui.outlet.MenuEntry;
+import rest.textui.outlet.Message;
+import rest.core.Outlet;
+import rest.core.Restaurants;
+import rest.core.Orders;
+import rest.core.Client;
+import rest.core.DishOfTheDay;
+/**
+ * This class implements the command that finalizes an order.
+ *
+ * @version 1.0
+ * @author PO
+ **/
+
+public class CheckoutOrder extends Command<Outlet> {
+    public CheckoutOrder(Outlet outlet) {
+			super(false, MenuEntry.CHECKOUT, outlet);
+    }
+
+    /**
+     * @see pt.utl.ist.po.ui.Command#execute()
+     **/
+    @Override
+    public void execute() throws InvalidOperation {
+			int sucesso = 0;
+			Form f = new Form(title());
+			InputString clientKey = new InputString(f, Message.reqClientId());
+			f.parse();
+			
+			for(Client c : entity().getClients()){
+				if((c.getKey().equals(clientKey.value()))){
+					sucesso = 1;
+					for(Orders o : c.getTemporaryOrders()){
+						DishOfTheDay dish = o.getDish();
+						double spent = o.getSpent();
+						
+						Restaurants res = o.getRestaurant();
+						res.setNoDishes(res.getDishesSold()+o.getNoDishes());
+						res.setSpent(res.getSpent()+spent);
+						c.setSpent(c.getSpent()+spent);
+						c.setNoDishes(c.getDishes()+o.getNoDishes());
+						
+						
+					}
+					c.setOrders(c.getOrders()+1);
+					c.newOrders();
+				}
+			}
+			if(sucesso == 0)
+				throw new UnknownKeyException(clientKey.value());
+    }
+}

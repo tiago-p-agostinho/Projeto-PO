@@ -1,0 +1,52 @@
+package rest.menu.manager.food;
+
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputInteger;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.InvalidOperation;
+
+import rest.textui.UnknownKeyException;
+import rest.textui.food.MenuEntry;
+import rest.textui.food.Message;
+import rest.core.Food;
+import rest.core.SimpleFood;
+import rest.core.Outlet;
+/**
+ * This class implements the command that updates the properties of food.
+ *
+ * @version 1.0
+ * @author PO
+ **/
+
+public class ChangeFoodProperties extends Command<Outlet> {
+    public ChangeFoodProperties(Outlet outlet) {
+	super(false, MenuEntry.CHANGE_FOOD, outlet);
+    }
+    
+    /**
+     * @see pt.utl.ist.po.ui.Command#execute()
+     **/
+    @Override
+    public void execute() throws InvalidOperation {
+        Form f = new Form();
+        InputString id = new InputString(f, Message.reqKey());
+        f.parse();
+        
+		int sucesso = 0; 
+		
+        for(Food comida : entity().getFood())
+            if(comida.getName().equals(id.value())){
+                if(comida instanceof SimpleFood){
+					sucesso = 1;
+                    SimpleFood aux = (SimpleFood)comida;
+                    Form c = new Form();
+                    InputInteger calories = new InputInteger(c, Message.reqCalories());
+                    c.parse();
+                    aux.changeCalories(calories.value());
+                }
+            }
+		if(sucesso == 0)
+			throw new UnknownKeyException(id.value());
+    }
+}

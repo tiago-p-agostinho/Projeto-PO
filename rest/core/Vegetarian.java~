@@ -1,0 +1,7 @@
+package rest.core;
+
+import rest.core.Type;
+
+public class Vegetarian extends Type {
+
+}

@@ -1,0 +1,42 @@
+package rest.core;
+
+import rest.core.DishOfTheDay;
+import java.io.*;
+import java.lang.*;
+
+public class Orders implements Serializable{
+
+	private int _noDishes;
+	private boolean _paid;
+	private double _totalSpent;
+	private DishOfTheDay _dish;
+	private Restaurants _restaurant;
+
+	public Orders(DishOfTheDay dish, Restaurants restaurant, double cost, int noDishes){
+		_dish=dish;
+		_totalSpent=cost;
+		_noDishes=noDishes;
+		_paid=false;
+		_restaurant=restaurant;
+		System.out.println("total "+_totalSpent);
+		System.out.println("no "+_noDishes);
+		System.out.println("cost "+cost);
+		
+	}
+
+	public Restaurants getRestaurant(){
+		return _restaurant;
+	}
+	
+	public double getSpent(){
+		return _totalSpent;
+	}
+	
+	public int getNoDishes(){
+		return _noDishes;
+	}
+
+	public DishOfTheDay getDish(){
+		return _dish;
+	}
+}

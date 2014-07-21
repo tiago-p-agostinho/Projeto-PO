@@ -1,0 +1,21 @@
+package rest.core;
+
+import rest.core.Outlet;
+import rest.core.SimpleFood;
+import rest.textui.food.Message;
+import java.io.*;
+
+public class Meat extends SimpleFood implements Serializable{
+
+	public Meat(Outlet outlet, String name, int calories){
+		super(outlet,name,calories);
+	}
+
+	public String toString(){
+		return Message.typeMeat() + "|" + super.getName() + "|" + (int)super.getCalories();
+	}
+
+	public String getDescription(){
+		return Message.typeMeat() + "|" + super.getName();
+	}
+}

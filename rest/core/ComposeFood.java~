@@ -1,0 +1,28 @@
+package rest.core;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.ArrayList;
+
+import rest.core.Food;
+import rest.core.SimpleFood;
+import rest.core.Outlet;
+
+public class ComposeFood extends Food{
+
+	private ArrayList<Food> _food = new ArrayList<Food>();
+	private ArrayList<Integer> _percentage = new ArrayList<Integer>();
+	private String _type;
+
+	public ComposeFood(Outlet outlet, String name, ArrayList<Food> food, ArrayList<Integer> percentage, String type){
+		setOutlet(outlet);
+		setName(name);
+		_food=food;
+		_percentage=percentage;
+		_type=type;
+	}
+
+	
+
+	
+}

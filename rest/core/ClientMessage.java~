@@ -1,0 +1,39 @@
+package rest.core;
+
+import rest.textui.clients.Message;
+
+
+public class ClientMessage{
+	private String _type;
+	private String _dish;
+	private String _message;
+
+	public ClientMessage(String type, String dish){
+		_type=type;
+		_dish=dish;
+		this.setMessage(_type, _dish);		
+		}
+	
+	public void setMessage(String type, String dish){
+		if(type=="NOVELTY"){
+			_message=Message.alertNovelty(dish);
+		}
+		else{
+			_message=Message.alertDiscount(dish);
+		}
+	}
+	
+	public String getMessage(){
+		return _message;
+	}
+
+	public String getType(){
+		return _type;
+	} 	
+		
+	public String toString(){
+		return getType() + "|" + getMessage();
+	} 
+}
+	
+

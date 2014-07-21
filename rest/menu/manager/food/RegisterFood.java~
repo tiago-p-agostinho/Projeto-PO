@@ -1,0 +1,72 @@
+package rest.menu.manager.food;
+
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputInteger;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.InvalidOperation;
+
+import rest.textui.DuplicateKeyException;
+import rest.textui.food.MenuEntry;
+import rest.textui.food.Message;
+import rest.core.Outlet;
+import rest.core.Food;
+import rest.core.SimpleFood;
+import rest.core.Meat;
+import rest.core.Fish;
+import rest.core.Vegetable;
+/**
+ * This class implements the command that register a new food.
+ *
+ * @version 1.0
+ * @author PO
+ **/
+
+public class RegisterFood extends Command<Outlet> {
+    public RegisterFood(Outlet outlet) {
+	super(false, MenuEntry.REGISTER_FOOD, outlet);
+    }
+	
+    /**
+     * @see pt.utl.ist.po.ui.Command#execute()
+     **/
+    @Override
+    public void execute() throws InvalidOperation {
+	Form f = new Form(title());
+	InputString type = new InputString(f, Message.reqType());
+	f.parse();	
+	while(true){
+		if((type.value().equals(Message.typeMeat())) || (type.value().equals(Message.typeFish())) || (type.value().equals(Message.typeVegetable()))){
+			break;
+		}		
+		f = new Form(title());
+		type = new InputString(f, Message.reqType());
+		f.parse();
+	}
+	f = new Form(title());	
+	InputString name = new InputString(f, Message.reqName());
+	InputInteger calories = new InputInteger(f, Message.reqCalories());
+	Food food = null;
+	f.parse();
+	boolean tests = true;
+	for(Food fo : entity().getFood()){
+		if(name.value().equals(fo.getName())){
+			tests = false;				
+			throw new DuplicateKeyException(name.value());
+			
+		}
+	}
+	if(test){
+		if((type.value().compareTo(Message.typeMeat()))==0){
+			food = new Meat(entity(), name.value(), calories.value());
+		}
+		if((type.value().compareTo(Message.typeFish()))==0){
+		food = new Fish(entity(), name.value(), calories.value());
+			}
+		if((type.value().compareTo(Message.typeVegetable()))==0){
+			food = new Vegetable(entity(), name.value(), calories.value());
+			}
+		entity().addFood(food);
+	}
+	}
+}

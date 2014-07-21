@@ -1,0 +1,74 @@
+package rest.menu.outlet;
+
+import pt.utl.ist.po.ui.Display;
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.InvalidOperation;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
+import rest.textui.outlet.MenuEntry;
+import rest.textui.outlet.Message;
+import rest.core.Outlet;
+import rest.core.Restaurants;
+import rest.core.DishOfTheDay;
+/**
+ * This class implements the command that shows all dishes of the day available
+ * in the outlet
+ *
+ * @version 1.0
+ * @author PO
+ **/
+
+public class ShowDishesOfTheDay extends Command<Outlet> {
+	public ShowDishesOfTheDay(Outlet outlet) {
+		super(false, MenuEntry.SHOW_DISHES_OF_THE_DAY, outlet);
+	}	
+
+	/**
+	* @see pt.utl.ist.po.ui.Command#execute()
+	**/
+	@Override
+	public void execute() throws InvalidOperation {
+		ArrayList<Restaurants> restaurants = entity().getRestaurants();
+		Display d = new Display();
+		
+		ArrayList<String> dishes = new ArrayList<String>();
+		ArrayList<DishOfTheDay> dishs = new ArrayList<DishOfTheDay>();
+		for(Restaurants r : restaurants){
+			ArrayList<DishOfTheDay> restDish = r.getDishes();
+			Collections.sort(restDish);
+			for(DishOfTheDay dish : restDish){
+				if(dish.getAvailable())
+					dishs.add(dish);
+			}
+		}
+		
+		Collections.sort(dishs);
+		for(DishOfTheDay s : dishs){
+			d.addNewLine(s.toString());
+		}
+		d.display();	
+		boolean first = true;
+		String dName = null;
+		for(DishOfTheDay di : dishs){
+			if(first){
+				dName=di.getName();
+				first = false;
+				String print = di.getClasses()+"|"+di.getName();
+				dishes.add(print);
+			}
+			if(!(dName.equals(di.getName()))){
+				dName=di.getName();
+				String print = di.getClasses()+"|"+di.getName();
+				dishes.add(print);
+			}
+		} 
+		for(String s : dishes){
+			d.addNewLine(s.toString());
+		}
+		d.display();	
+	}
+}

@@ -1,0 +1,98 @@
+package rest.menu.manager.food;
+
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputInteger;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.InvalidOperation;
+
+import rest.textui.DuplicateKeyException;
+import rest.textui.UnknownKeyException;
+import rest.textui.food.MenuEntry;
+import rest.textui.food.Message;
+import rest.textui.food.PercentageTooHighException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.ArrayList;
+
+
+import rest.core.Outlet;
+import rest.core.Food;
+import rest.core.PreparedFood; 
+import rest.core.SimpleFood;
+import rest.core.Vegetable;
+/**
+ * This class implements the command for registering a new prepared food.
+ *
+ * @version 1.0
+ * @author PO
+ **/
+
+public class RegisterPreparedFood extends Command<Outlet> {
+    public RegisterPreparedFood(Outlet outlet) {
+		super(false, MenuEntry.REGISTER_PREPRARED, outlet);
+    }
+
+    /**
+     * @see pt.utl.ist.po.ui.Command#execute()
+     **/
+    @Override
+    public void execute() throws InvalidOperation {
+		Form f = new Form(title());
+		ArrayList<Food> newFood = new ArrayList<Food>();
+		ArrayList<Integer> newPercentage = new ArrayList<Integer>();
+		InputString name = new InputString(f,Message.reqName());
+		f.parse();
+		for(Food f1 : entity().getFood()){
+			if(name.value().equals(f1.getName())){
+				throw new DuplicateKeyException(name.value());
+			}
+		}
+		f = new Form(title());
+		String type;
+		boolean vegetable=true;
+		int percentage=0;
+		boolean exist=false;
+		while(true){
+			if(percentage==100)
+				break;
+			if(percentage>100){
+				throw new PercentageTooHighException(percentage);			
+			}
+			InputString food = new InputString(f,Message.reqKey());
+			f.parse();
+			for(Food f1 : entity().getFood()){
+								
+				if((f1.getName().compareTo(food.value()))==0){
+					f = new Form(title());
+					InputInteger per = new InputInteger(f,Message.reqPercentage());
+					f.parse();
+					percentage+=per.value();
+					newFood.add(f1);
+					newPercentage.add(per.value());
+					if(((f1.getType().equals("VEG"))|| (f1 instanceof Vegetable))&&vegetable)
+						vegetable=true;
+					} else {
+						vegetable=false;
+							}
+					exist=true;					
+					break;			
+				}
+				
+			}		
+			if(!exist){
+				throw new UnknownKeyException(food.value());		
+			}
+			f = new Form(title());
+    	}
+		
+		if(vegetable){
+			type = Message.typeVeg();
+		} else {
+			type = Message.typeNoVeg();
+				}		
+		Food pFood = new PreparedFood(entity(),name.value(),newFood,newPercentage, type);
+		entity().addFood(pFood);	
+	}
+}
+	

@@ -1,0 +1,46 @@
+package rest.menu.manager.food;
+
+import pt.utl.ist.po.ui.Display;
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputInteger;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.InvalidOperation;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.ArrayList;
+
+import rest.textui.food.MenuEntry;
+import rest.textui.food.Message;
+import rest.core.Food;
+import rest.core.Outlet;
+
+import java.lang.*;
+
+/**
+ * This class implements the command for listing all food.
+ *
+ * @version 1.0
+ * @author PO
+ **/
+
+public class ShowAllFood extends Command<Outlet>  {
+
+    public ShowAllFood(Outlet outlet) {
+	super(false, MenuEntry.LIST_FOOD, outlet);
+    }
+    
+    /**
+     * @see pt.utl.ist.po.ui.Command#execute()
+     **/
+    @Override
+    public void execute() throws InvalidOperation {
+		ArrayList<Food> food = entity().getFood();
+		Collection.sort(food);
+		Display d = new Display(title());		
+		for(Food f : food){
+			d.addNewLine(f.toString());
+    	}
+		d.display();
+    }
+}

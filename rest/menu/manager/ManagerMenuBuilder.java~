@@ -1,0 +1,92 @@
+package rest.menu.manager;
+
+/**
+ * This class is responsible for creating all menus that appear in the manager application.
+ * There is a static method for each available menu.
+ *
+ * @version 1.0
+ * @author PO
+ **/
+
+import pt.utl.ist.po.ui.*;
+
+import rest.menu.manager.main.*;
+import rest.menu.manager.client.*;
+import rest.menu.manager.food.*;
+import rest.menu.manager.restaurants.*;
+import rest.menu.manager.restaurant.*;
+import rest.menu.manager.search.*;
+
+import rest.core.*;
+import rest.textui.manager.MenuEntry; 
+
+public final class ManagerMenuBuilder {
+    public static void openMainMenu(Outlet o) {
+	Menu menu = new Menu(MenuEntry.TITLE, new Command<?>[] {
+		new New(o),
+		new Open(o),
+		new Save(o),
+		new SaveAs(o),
+		new OpenClientsMenu(o),
+		new OpenFoodMenu(o),
+		new OpenRestaurantsMenu(o),
+		new OpenSearchMenu(o)
+	    });
+	menu.open();
+    }
+
+    public static void openClientMenu(Outlet o) {
+	Menu menu = new Menu(rest.textui.clients.MenuEntry.TITLE, new Command<?>[] {
+		new ShowClients(o), 	// List all clients
+		new RegisterClient(o),  	// Register new client
+		new ChangeClientType(o),	// Change client type
+		new SubscribeClient(o),	// Add client to alert list
+		new UnsubscribeClient(o),	// Remove client from alert list
+		new ShowClientAlerts(o)     // List alert messages for a given client
+	    });
+	menu.open();
+    }
+
+   public static void openFoodMenu(Outlet o) {
+		Menu menu = new Menu(rest.textui.food.MenuEntry.TITLE, new Command<?>[] { 
+			new ShowAllFood(o),
+			new RegisterFood(o),
+			new RegisterPreparedFood(o),
+			new ChangeFoodProperties(o),
+			new DescribePreparedFood(o)
+	    });
+
+	menu.open();
+  }
+
+	public static void openRestaurantsMenu(Outlet o) {
+		Menu menu = new Menu(rest.textui.restaurants.MenuEntry.TITLE, new Command<?>[] {
+			new ShowAllRestaurants(o),
+			new RegisterRestaurant(o),
+			new ManageRestaurant(o)
+		});
+	menu.open();
+   }
+
+    public static void openRestaurantMenu(Restaurants restaurant) {
+		Menu menu = new Menu(rest.textui.restaurant.MenuEntry.TITLE, new Command<?>[] {
+			new ShowDishesOfTheDay(restaurant),
+			new RegisterDishOfTheDay(restaurant),
+			new ShowDishOfTheDayCalories(restaurant),
+			new AddDishOfTheDayToOutlet(restaurant),
+			new RemoveDishOfTheDayFromOutlet(restaurant),
+			new ChangeDishOfTheDayDiscount(restaurant),
+	    });
+			menu.open();
+  }
+
+    public static void openSearchMenu(Outlet o) {
+		Menu menu = new Menu(rest.textui.search.MenuEntry.TITLE, new Command<?>[] {
+			new ShowVegetarianFood(o),
+			new ShowClientsWithoutAlerts(o),
+			new ShowClientsWithClosedOrders(o),
+			new ShowRestaurantsWithDiscounts(o)
+		});
+		menu.open();
+    }
+}

@@ -1,0 +1,91 @@
+package rest.menu.outlet;
+
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.Display;
+import pt.utl.ist.po.ui.InputInteger;
+import pt.utl.ist.po.ui.InvalidOperation;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.ArrayList;
+
+
+import rest.textui.UnknownKeyException;
+import rest.textui.outlet.InvalidKeyException;
+import rest.textui.outlet.MenuEntry;
+import rest.textui.outlet.Message;
+import rest.textui.outlet.NotAdequateException;
+import rest.core.*;
+
+/**
+ * This class implements the command that adds a dish to the order of a client.
+ *
+ * @version 1.0
+ * @author PO
+ **/
+
+public class AddDishOfTheDayToOrder extends Command<Outlet> {
+    public AddDishOfTheDayToOrder(Outlet outlet) {
+			super(false, MenuEntry.ADD_TO_BASKET, outlet);
+    }
+
+    /**
+     * @see pt.utl.ist.po.ui.Command#execute()
+     **/
+    @Override
+    public void execute() throws InvalidOperation {
+			int noDishes=0;	
+			Form f = new Form(title());
+			InputString email = new InputString(f, Message.reqClientId());
+			InputString dishName = new InputString(f, Message.reqDishOfTheDayName());
+			InputInteger quantity = new InputInteger(f, Message.reqQuantity());
+			f.parse();
+			ArrayList<DishOfTheDay> dishes = new ArrayList<DishOfTheDay>();
+			for(Client c : entity().getClients()){
+				if(email.value().equals(c.getKey())){
+					Client client = c;
+					break;
+				}
+			}
+			for(Restaurants r : entity().getRestaurants()){
+				for(DishOfTheDay d : r.getDishes()){
+					if(dishName.value().equals(d.getName())){
+						dishes.add(d);
+						++noDishes;
+						break;		
+					}
+				}
+			}
+			if(noDishes>1){
+				Display d = new Display();
+				for(DishOfTheDay dish : dishes){
+					d.addNewLine(dish.toString());
+				}			
+				d.display();
+				f = new Form(title());
+				InputString resName = new InputString(f, Message.reqRestId());
+				f.parse();
+				for(Restaurants r : entity().getRestaurants()){
+					if(resName.value().equals(r.getName()))
+						Restaurants res = r;				
+				}	
+ 
+				for(DishOfTheDay d : dishes){
+					if(resName.value().equals(d.getRestaurantName())){
+						client.addOrder(new Orders(d,r,quantity.value()*d.getPrice(),quantity.value()));
+						break;		
+					}
+				}
+			} else {
+					for(Restaurants r : entity().getRestaurants()){
+						if(dishes.get(0).getRestaurantName().equals(r.getName()))
+							Restaurants res = r;				
+					}
+					client.addOrder(new Orders(dishes.get(0),r,quantity.value()*dishes.get(0).getPrice(),quantity.value()));		
+			}
+					
+
+			}
+			
+			

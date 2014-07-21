@@ -1,0 +1,7 @@
+package rest.core;
+import java.io.*;
+
+public class Type implements Serializable {
+
+	
+}

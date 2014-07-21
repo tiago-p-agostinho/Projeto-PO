@@ -1,0 +1,31 @@
+package rest.core;
+
+import rest.core.Food;
+import rest.core.Outlet;
+import java.io.*;
+
+public class SimpleFood extends Food implements Serializable{
+
+	private int _calories;	
+
+	public SimpleFood(Outlet outlet, String name, int calories){
+		super(outlet,name);
+		_calories=calories;
+	}
+
+	public void changeCalories(int calories){
+		_calories=calories;
+	}
+
+	public String getType(){
+		return "";
+	}
+
+	public int getCalories(){
+		return _calories;
+	}
+
+	public String getDescription(){
+		return "";
+	}			
+}

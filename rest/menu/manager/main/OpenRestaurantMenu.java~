@@ -1,0 +1,29 @@
+package rest.menu.manager.main;
+
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Display;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.InputBoolean;
+import pt.utl.ist.po.ui.InvalidOperation;
+
+import rest.textui.Restaurant.MenuEntry;
+import rest.textui.Restaurant.Message;
+
+import rest.menu.manager.ManagerMenuBuilder;
+import rest.core.Outlet;
+import rest.core.Restaurants;
+
+public class OpenRestaurantMenu extends Command<Restaurants> {
+
+
+	public OpenRestaurantMenu(Restaurants restaurant){
+		super(false, MenuEntry.TITLE, restaurant);
+	}
+
+	public final void execute(){
+		
+		ManagerMenuBuilder m =new ManagerMenuBuilder();
+		m.openRestaurantMenu(entity());
+	}	
+}

@@ -1,0 +1,40 @@
+package rest.core;
+
+import rest.core.Outlet;
+import rest.core.SimpleFood;
+import rest.core.PreparedFood;
+import java.io.*;
+import java.lang.*;
+
+public abstract  class Food implements Serializable, Comparator{
+	
+	private String _name;
+	private Outlet _outlet;
+
+	public Food(Outlet outlet, String name){
+		setName(name);
+		setOutlet(outlet);
+	}
+
+	public void setName(String name){
+		_name=name;
+	}	
+	
+	public abstract String getType();
+		
+	public void setOutlet(Outlet outlet){
+		_outlet=outlet;
+	}
+	public abstract double getCalories();
+
+	public String getName(){
+		return _name;
+	}
+	
+	public int compareToIgnoreCase(String name){
+		
+		return _name.compareTo(name);
+	}
+
+	public String getDescription(){return "";}
+}

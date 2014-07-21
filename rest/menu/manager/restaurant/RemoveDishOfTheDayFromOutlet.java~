@@ -1,0 +1,35 @@
+package rest.menu.manager.restaurant;
+
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Display;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.InputBoolean;
+import pt.utl.ist.po.ui.InvalidOperation;
+
+import rest.textui.restaurant.MenuEntry;
+import rest.textui.restaurant.Message;
+import rest.core.Restaurants;
+/**
+ * Class <code>RemoveDishOfTheDayFromOutlet</code> is a command for removing
+ * a selected dish to the dishes of the day of the outlet.
+ *
+ * @version 1.0
+ * @author PO
+ **/
+
+public class RemoveDishOfTheDayFromOutlet.java extends Command<Restaurants> {
+    /**
+     */
+    public RemoveDishOfTheDayFromOutlet(Restaurants restaurants) {
+	super(false, MenuEntry.MAKE_UNAVAILABLE, restaurants);
+    }
+    
+    /**
+     * @see pt.utl.ist.po.ui.Command#execute()
+     **/
+    @Override
+    public final void execute() throws InvalidOperation {
+	// TO DO
+    }
+}

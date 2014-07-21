@@ -1,0 +1,32 @@
+OMNIV|Darth Vader|Ovader @ imperial.net
+OMNIV|Master Yoda A Yoda|Oyoda@jedi.edu
+OMNIV|Master Yoda|Oyoda@ jedi.edu
+OMNIV|Master Yoda|Oyoda@ jedi edu
+OMNIV|James T. Kirk|Okirk @ starfleet net
+OMNIV|James T. T. Kirk|Okirk@starfleet net
+VEGET|Darth Vader|Vvader @ imperial.net
+VEGET|Master Yoda A Yoda|Vyoda@jedi.edu
+VEGET|Master Yoda|Vyoda@ jedi.edu
+VEGET|Master Yoda|Vyoda@ jedi edu
+VEGET|James T. Kirk|Vkirk @ starfleet net
+VEGET|James T. T. Kirk|Vkirk@starfleet net
+RESTAURANT|AllPizza|zpizza @ google com
+RESTAURANT|All Pizza|apizza@ google.com
+RESTAURANT|Feel light Pizza|feelight @ europe.com
+RESTAURANT|All you want Pizza|allyouWANT@lisbonweek.net
+VEGETABLE|alface|1
+VEGETABLE|tomate|2
+FISH|linguado|6
+VEGETABLE|azeite|9
+VEGETABLE|batata|4
+MEAT|carne de porco|14
+PREPARED|salada mista|alface=50|tomate=45|azeite=5
+PREPARED|batata palha|batata=78|azeite=22
+PREPARED|linguado grelhado|linguado=97|azeite=3
+DOTD|AllPizza|linguado grelhado|250|10|5
+DOTD|Feel light Pizza|batata palha|250|2|2
+DOTD|Feel light Pizza|linguado grelhado|220|120|20
+DOTD|Feel light Pizza|salada mista|100|12|50
+DOTD|Feel light Pizza|alface|115|5000|100
+DOTD|Feel light Pizza|carne de porco|130|10000|75
+DOTD|AllPizza|alface|115|5000|100

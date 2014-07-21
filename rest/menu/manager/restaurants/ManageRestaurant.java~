@@ -1,0 +1,47 @@
+package rest.menu.manager.restaurants;
+
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Display;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.InvalidOperation;
+
+import rest.manager.ManagerMenuBuilder;
+import rest.textui.restaurants.MenuEntry;
+import rest.textui.restaurants.Message;
+import rest.textui.UnknownKeyException;
+import rest.core.Outlet;
+import rest.core.Restaurants;
+import rest.menu.manager.main.OpenRestaurantMenu;
+/**
+ * Class <code>ManageRestaurant</code> represents a command for openning the restaurant menu for
+ * a selected restaurant.
+ *
+ * @version 1.0
+ * @author PO
+ **/
+
+public class ManageRestaurant extends Command<Outlet> {
+    /**
+     */
+    public ManageRestaurant(Outlet outlet) {
+		super(false, MenuEntry.OPEN_RESTAURANT_MENU, outlet);
+    }
+    
+    /**
+     * @see pt.utl.ist.po.ui.Command#execute()
+     **/
+    @Override
+    public final void execute() throws InvalidOperation {
+			Form f = new Form();
+			InputString name = new InputString(f,Message.reqKey());
+			f.parse();
+			for(Restaurants r : entity().getRestaurants()){
+				if((name.value().compareTo(r.getName()))==0){
+					ManagerMenuBuilder m = new ManagerMenuBuilder();
+					m.openRestaurantMenu(r);
+				}
+			}
+		}
+
+}

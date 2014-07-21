@@ -1,0 +1,54 @@
+package rest.menu.manager.restaurant;
+
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Display;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.InputBoolean;
+import pt.utl.ist.po.ui.InputInteger;
+import pt.utl.ist.po.ui.InvalidOperation;
+
+import rest.textui.restaurant.MenuEntry;
+import rest.textui.restaurant.Message;
+import rest.core.Restaurants;
+import rest.core.Outlet;
+import rest.core.DishOfTheDay;
+import rest.core.Food;
+import rest.core.Client;
+import rest.core.ClientMessage;
+
+/**
+ * Class <code>RegisterDishOfTheDay</code> is a command for creating
+ * a dish of the day.
+ *
+ * @version 1.0
+ * @author PO
+ **/
+
+public class RegisterDishOfTheDay extends Command<Restaurants> {
+    /**
+     */
+    public RegisterDishOfTheDay(Restaurants restaurants) {
+			super(false, MenuEntry.CREATE_DISH_OF_THE_DAY, restaurants);
+    }
+    
+    /**
+     * @see pt.utl.ist.po.ui.Command#execute()
+     **/
+    @Override
+    public final void execute() throws InvalidOperation {
+			Form f = new Form(title());
+			InputString food = new InputString(f,Message.reqFoodKey());
+			InputInteger quantity = new InputInteger(f,Message.reqQuantity());
+			InputInteger price = new InputInteger(f,Message.reqPrice());
+			f.parse();
+			Outlet outlet = entity().getOutlet();
+			
+			for(Food f1 : outlet.getFood()){
+				if((f1.getName().compareTo(food.value()))==0)
+					DishOfTheDay dish = new DishOfTheDay(entity().getName(),f1,quantity.value(),price.value(), 0);
+				    entity().addDish(dish);
+  		}
+			
+		}
+}

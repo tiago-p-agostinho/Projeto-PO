@@ -1,0 +1,56 @@
+package rest.menu.manager.client;
+
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.InvalidOperation;
+
+import rest.textui.DuplicateKeyException;
+import rest.textui.clients.MenuEntry;
+import rest.textui.clients.Message;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.ArrayList;
+
+
+import rest.core.Outlet;
+import rest.core.Client;
+import rest.textui.clients.Message;
+/**
+ * This class implements the command that changes the type of a given client.
+ *
+ * @version 1.0
+ * @author PO
+ **/
+
+public class ChangeClientType extends Command<Outlet> {
+    public ChangeClientType(Outlet o) {
+			super(false, MenuEntry.CHANGE_TYPE, o);
+    }
+
+    //**
+     //* @see pt.utl.ist.po.ui.Command#execute()
+     //**«ß/
+    @Override
+    public void execute() throws InvalidOperation {
+			Form f = new Form(title());
+			InputString email = new InputString(f, Message.reqKey());
+			InputString type = new InputString(f, Message.reqType());
+			f.parse();
+			while(true){
+				if(((type.value().compareTo("VEGETARIAN"))==0)||((type.value().compareTo("OMNIVOROUS"))==0))
+					break;
+				f = new Form(title());
+				type = new InputString(f, Message.reqType());
+				f.parse();
+			}
+			
+			for(Client c : entity().getClients()){
+					if(((email.value()).compareTo(c.getKey()))==0){
+							c.setType(type.value());
+							break;
+					}
+			}
+			entity().setExecutado(true);
+	}
+}

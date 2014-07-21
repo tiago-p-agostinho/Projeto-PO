@@ -1,0 +1,47 @@
+package rest.menu.manager.main;
+
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Display;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.InputBoolean;
+import pt.utl.ist.po.ui.InvalidOperation;
+
+import rest.textui.manager.MenuEntry;
+import rest.textui.manager.Message;
+
+
+import rest.core.Outlet;
+/**
+ * Class <code>Save</code> represents a command to save the current state of application in the file
+ * associated to the application.
+ *
+ * @version 1.0
+ * @author PO
+ **/
+
+public class Save extends Command<Outlet> {
+    /**
+     */
+    public Save(Outlet o) {
+	super(false, MenuEntry.SAVE, o);
+    }
+    
+    /**
+     * @see pt.utl.ist.po.ui.Command#execute()
+     */
+    @Override
+    public final void execute() throws InvalidOperation {
+		if(entity().getFicheiro() == null) {
+			Form f = new Form(title());
+			InputString nome+(.txt) = new InputString (f, Message.newSaveAs());
+			f.parse();
+			entity().setFicheiro(nome.value());
+		}
+		try{
+			entity().saveAs(entity().getFicheiro());
+		}catch(Exception e){
+		    throw new InvalidOperation(e.toString());
+		}
+    }
+}

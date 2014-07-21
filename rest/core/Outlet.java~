@@ -1,0 +1,192 @@
+package rest.core;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.ArrayList;
+import rest.core.Client;
+import rest.core.Restaurants;
+import rest.core.Food;
+import rest.core.*;
+import java.io.*;
+
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Display;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.InputBoolean;
+import pt.utl.ist.po.ui.InvalidOperation;
+
+import rest.textui.manager.Message;
+
+public class Outlet implements Serializable {
+
+	private boolean executado = false;
+	private String _name;
+	private String _nomeDoFicheiroAberto = null;
+	private ArrayList<Client> _clients = new ArrayList<Client>() ;
+	private ArrayList<Food> _food = new ArrayList<Food>();
+	private ArrayList<Restaurants> _restaurants = new ArrayList<Restaurants>();
+
+	public Outlet(String name){
+		_name=name;
+	}
+	
+	public String getName() {
+		return _name;
+	}
+	
+	public void setExecutado(boolean value){
+		executado = value;
+	}
+	
+	public String getFicheiro() {
+		return _nomeDoFicheiroAberto;
+	}
+	
+	public void setFicheiro(String file){
+		_nomeDoFicheiroAberto = file;	
+	}
+
+	public ArrayList<Client> getClients(){
+		return _clients;
+	}
+	
+	public ArrayList<Restaurants> getRestaurants(){
+		return _restaurants;
+	}
+	
+	public ArrayList<Food> getFood(){
+		return _food;
+	}
+
+	public void addClient(Client client){
+		_clients.add(client);
+		
+	}
+
+	public void addRestaurant(Restaurants restaurant){
+		_restaurants.add(restaurant);
+		
+	}
+
+	public void addFood(Food food){
+		_food.add(food);
+		
+	}
+	
+	public void parseInputFile(String file) {
+	      int lineno = 0;
+	      try {
+			BufferedReader in = new BufferedReader(new FileReader(file));
+		  	String s;
+
+		  	while ((s = in.readLine()) != null) {
+		      	String line = new String(s.getBytes(), "UTF-8");
+		      	lineno++;
+		      	String[] split = line.split("\\|");
+		      	if (split[0].equals("OMNIV")){
+			    		addClient(new Client(this, split[1], split[2], "OMNIVOROUS"));
+				}else if(split[0].equals("VEGET")){
+			    		addClient(new Client(this, split[1], split[2], "VEGETARIAN"));
+		      	}else if(split[0].equals("RESTAURANT")){
+			  		addRestaurant(new Restaurants(this, split[1], split[2]));
+		      	}else if(split[0].equals("MEAT")){
+			  		addFood(new Meat(this, split[1], Integer.parseInt(split[2])));
+		      	}else if(split[0].equals("FISH")){
+			  		addFood(new Fish(this, split[1], Integer.parseInt(split[2])));
+		      	}else if(split[0].equals("VEGETABLE")){
+			 		addFood(new Vegetable(this, split[1], Integer.parseInt(split[2])));
+		      	}else if(split[0].equals("PREPARED")){
+			  		ArrayList<Food> listFood = new ArrayList<Food>();
+			  		ArrayList<Integer> listPercent = new ArrayList<Integer>();
+			  		String vegetable = "VEG";
+			  		for(int i=2;i<split.length;++i){
+			      		String[] igual = split[i].split("=");
+			     			for(Food food : _food){
+				  			if(food.getName().equals(igual[0])){
+				      			if(!(food instanceof Vegetable)) 
+				      				vegetable = "NOVEG"; 
+				      			listFood.add(food);
+				      			listPercent.add(new Integer(Integer.parseInt(igual[1])));
+				      			break;
+				  			}
+			      		}
+			  		}
+			  		addFood(new PreparedFood(this, split[1], listFood, listPercent, vegetable));
+		      	}else if(split[0].equals("DOTD")){
+			  		for(Restaurants rest : _restaurants){
+			     	 		if(rest.getName().equals(split[1])){
+				  			for(Food food : _food){
+				      			if(food.getName().equals(split[2])){
+					  				rest.addDish(new DishOfTheDay(rest.getName(), food, Integer.parseInt(split[3]), Integer.parseInt(split[4]), Integer.parseInt(split[5])));
+					  				break;
+				      			}
+				  			}
+				  			break;
+			      		}
+			  		}
+		      	}
+		  	}
+	      } catch (FileNotFoundException e) {
+		  	System.out.println("Erro (file not found):"+file+": "+e);
+	      } catch (IOException e) {
+		  	System.out.println("Erro (IO):"+file+":"+lineno+": line "+e);
+	      }
+	}
+	
+	
+    	public void quit() throws InvalidOperation{
+		if(executado){
+	    		Form f = new Form();
+	    		InputBoolean valor = new InputBoolean(f, Message.saveBeforeExit());
+	    		f.parse();
+	    		if(valor.value() && _nomeDoFicheiroAberto == null){
+				Form g = new Form();
+				InputString nome = new InputString (g, Message.newSaveAs());
+				g.parse();
+				try{
+		    			saveAs(nome.value());
+					}catch(Exception e){
+		    				throw new InvalidOperation();
+					}
+	    		} else if (valor.value()) {
+	    			try{
+		    			saveAs(_nomeDoFicheiroAberto);
+					}catch(Exception e){
+		    				throw new InvalidOperation();
+					}
+	    		}
+		}
+    	}
+	
+	public void load(String name) throws Exception{
+		setFicheiro(name);
+	 	ObjectInputStream in = new ObjectInputStream(new FileInputStream(name));
+		Outlet ret = (Outlet)in.readObject();
+		_name = ret.getName();
+		_clients = ret.getClients();
+		_food = ret.getFood();
+		_restaurants = ret.getRestaurants();
+		in.close();
+	}
+	
+
+
+	public void saveAs(String file) throws Exception {
+		executado = false;
+		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
+		out.writeObject(this);
+		out.close();
+	}
+
+	public void mostraPreparedFood (PreparedFood pf) {
+		Display d = new Display();
+		d.addNewLine(pf.getDescription());
+		for(int i = 0; i < pf.getFood().size(); i++) {
+			d.addNewLine(pf.getFood().get(i).getDescription()+"|"+pf.getPercentage().get(i));
+			if(pf.getFood().get(i) instanceof PreparedFood)
+				mostraPreparedFood((PreparedFood)pf.getFood().get(i));
+		}
+		d.display();
+	}
+}

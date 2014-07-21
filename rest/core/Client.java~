@@ -1,0 +1,139 @@
+package rest.core;
+
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import rest.textui.clients.Message;
+import java.io.*;
+
+public class Client implements Serializable, Comparable{
+
+	private String _key;
+	private String _name;
+	private Type _type;
+	private Outlet _outlet;
+	private int _orders;
+	private int _numberDishes;
+	private double _spent;
+	private boolean _acceptNovelty;
+	private boolean _acceptDiscount;
+	private ArrayList<Orders> _temporaryOrders = new ArrayList<Orders>();
+	private ArrayList<ClientMessage> _messageList = new ArrayList<ClientMessage>();
+
+
+	public Client(){}
+
+
+	public Client(Outlet outlet, String name, String key, String type){
+		_key=key;
+		_name=name;
+		_outlet=outlet;
+		_acceptNovelty=false;
+		_acceptDiscount=false;
+		if((type.compareTo("VEGETARIAN"))==0)
+			_type = new Vegetarian();
+		else if((type.compareTo("OMNIVOROUS"))==0)
+			_type = new Omnivorous();
+	}		
+	
+	
+	public void setSpent(double value){
+		_spent=value;
+	}
+
+	public void setNoDishes(int no){
+		_numberDishes=no;
+	}
+
+	public void setOrders(int no){
+		_orders=no;
+	}
+
+	public void setName(String name){
+		_name=name;	
+	}
+
+	public void setKey(String key){
+		_key=key;	
+	}
+
+	public void setOutlet(Outlet outlet){
+		_outlet=outlet;
+	}
+
+	public void setType(String type){
+		if((type.compareTo("VEGETARIAN"))==0)
+			_type = new Vegetarian();
+		else
+			_type = new Omnivorous();
+	}		
+
+	public void setAcceptDiscount(boolean value){
+		_acceptDiscount=value;
+	}
+
+	public void setAcceptNovelty(boolean value){
+		_acceptNovelty=value;
+	}
+
+	public String getName(){
+		return _name;
+	}
+
+	public String getKey(){
+		return _key;
+	}
+
+	public String getType(){
+		if(_type instanceof Vegetarian)
+			return Message.clientTypeVegetarian();
+		else
+			return Message.clientTypeOmnivorous();
+	 
+	}
+
+	public int getOrders(){
+		return _orders;	
+	}
+	
+	public int getDishes(){
+		return _numberDishes;	
+	}
+
+	public double getSpent(){
+		return _spent;
+	}
+
+	public boolean getAcceptDiscount(){
+		return _acceptDiscount;
+	}
+
+	public boolean getAcceptNovelty(){
+		return _acceptNovelty;
+	}
+	public void addOrder(Orders order){
+		_temporaryOrders.add(order);
+	}
+	
+	public void newOrders(){
+		_temporaryOrders.clear();
+	}
+	
+	public ArrayList<ClientMessage> getMessageList(){
+		return _messageList;
+	}
+	
+	public ArrayList<Orders> getTemporaryOrders(){
+		return _temporaryOrders;
+	}
+	
+	public int compareTo(Object c){
+		Client client = (Client)c;
+		return _key.compareTo(client.getKey());
+	}
+
+	public String toString(){
+		return getType() + "|" + getName() + "|" + getKey() + "|" + getOrders() + "|" + getDishes() + "|" + (int)getSpent();
+	} 
+}

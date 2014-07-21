@@ -1,0 +1,65 @@
+package rest.menu.manager.client;
+
+/**
+ * This class implements the command that shows all alerts for a given client.
+ *
+ * @version 1.0
+ * @author PO
+  **/
+
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.InvalidOperation;
+import pt.utl.ist.po.ui.Display;
+
+import rest.textui.UnknownKeyException;
+import rest.textui.DuplicateKeyException;
+import rest.textui.clients.MenuEntry;
+import rest.textui.clients.Message;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Collection;
+
+import rest.core.Outlet;
+import rest.core.Client; 
+import rest.core.ClientMessage;
+
+public class ShowClientAlerts extends Command<Outlet> {
+    public ShowClientAlerts(Outlet o) {
+	super(false, MenuEntry.SHOW_ALERTS, o);
+    }
+
+    /**
+     * @see pt.utl.ist.po.ui.Command#execute()
+     **/
+    @Override
+public void execute() throws InvalidOperation {
+	
+	Form f = new Form(title());
+	InputString key = new InputString(f, Message.reqKey());
+	f.parse();
+	
+	Client client = null;
+	
+	for(Client c: entity().getClients()){
+		if((c.getKey().compareTo(key.value()))==0){
+						
+			client = c;
+			break;
+		}
+	}
+	ArrayList<ClientMessage> cm = client.getMessageList();		
+	Collections.reverse(cm);
+	Display dis = new Display();				
+	for(ClientMessage cmsg : cm){
+		dis.addNewLine(cmsg.toString());
+	}
+	dis.display();
+	
+}
+}
+
+
+
+

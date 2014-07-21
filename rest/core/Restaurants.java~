@@ -1,0 +1,134 @@
+
+package rest.core;
+import rest.core.Outlet;
+import rest.core.DishOfTheDay;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.ArrayList;
+import java.io.*;
+import java.lang.*;
+
+/**
+ * Class restaurants contains information about their dishes of the day.
+ * Each restaurant knows their spents and how many dishes sold.
+ *
+ * @author Francisco Ferreira, Sebastião Melo, Tiago Agostinho
+ * @version 1.0
+ */
+public class Restaurants implements Serializable, Comparable{
+
+	/** The Restaurant´s name.*/
+	private String _name;
+	
+	/** The Restaurant´s e-mail.*/	
+	private String _email;
+	
+	/** The Restaurant´s number of dishes sold.*/	
+	private int _dishesSold;
+	
+	/** The Restaurant´s spent.*/
+	private double _spent;
+	
+	/** The Restaurtant´s Menu of dishes of the day.*/	
+	private ArrayList<DishOfTheDay> _dishes = new ArrayList<DishOfTheDay>();
+	
+	/** The Restaurant´s Outlet. */
+	private Outlet _outlet;
+	
+	
+	/**
+	 * Constructor (initializes _name, _email and _outlet).
+	 * 
+	 * @param name
+	 *            The Restaurant´s name.
+	 * @param email
+	 *            The Restaurant´s e-mail.
+	 * @param outlet
+	 *            The Restaurant´s outlet.
+	 */
+	public Restaurants(Outlet outlet, String name, String email){
+		_name=name;
+		_email=email;
+		_outlet=outlet;	
+	}
+	
+
+	public void setNoDishes(int no){
+		_dishesSold=no;
+	}
+
+	public void setSpent(double value){
+		_spent=value;
+	}
+
+	/**
+	 * @return the restaurant's name.
+	 */
+	public String getName(){
+		return _name;
+	}
+	
+	/**
+	 * @return the restaurant's email.
+	 */
+	public String getEmail(){
+		return _email;
+	}
+
+	/**
+	 * @return the restaurant's number of dishes.
+	 */
+	public int getDishesSold(){
+		return _dishesSold;
+	}
+	
+	/**
+	 * @return the restaurant's spent.
+	 */
+	public double getSpent(){
+		return _spent;
+	}
+
+	/**
+	 * @return the restaurant's outlet.
+	 */
+	public Outlet getOutlet(){
+		return _outlet;
+	}
+
+	/**
+	 * @return the restaurant's list of dishes of the day.
+	 */
+	public ArrayList<DishOfTheDay> getDishes(){
+		return _dishes;
+	}
+
+	/**
+	 * @param dish
+	 *		add a dish to list of the dishes of the day.
+	 */
+	public void addDish(DishOfTheDay dish){
+		_dishes.add(dish);
+	}
+
+
+	/** 
+	 * @return a string representation of a holder (name, dishes sold and total spent).
+	 */
+	public String toString(){
+		return  getName() + "|" + getDishesSold() + "|" + (int)getSpent();
+	}
+
+	/**
+	 * @param res
+	 * 	     Receive an object of the restautant type.
+	 * 
+	 * @return two restaurants are equals if they have the same name and return 0. 
+	 * 
+	 */
+	public int compareTo(Object res){
+		Restaurants restaurant = (Restaurants)res;
+		return _name.compareTo(restaurant.getName());
+	}
+
+}

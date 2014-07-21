@@ -1,0 +1,60 @@
+package rest.menu.manager.restaurant;
+
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Display;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.InputBoolean;
+import pt.utl.ist.po.ui.InvalidOperation;
+
+import rest.textui.restaurant.MenuEntry;
+import rest.textui.restaurant.Message;
+import rest.textui.UnknownKeyException;
+import rest.core.Restaurants;
+import rest.core.DishOfTheDay;
+import rest.core.PreparedFood;
+/**
+ * Class <code>ShowDishOfTheDayCalories</code> is a command for showing
+ * the calories of a given dish of the day.
+ *
+ * @version 1.0
+ * @author PO
+ **/
+
+public class ShowDishOfTheDayCalories extends Command<Restaurants> {
+	/**
+	*/
+	public ShowDishOfTheDayCalories(Restaurants restaurant) {
+		super(false, MenuEntry.COMPUTE_CALORIES, restaurant);
+	    }
+    
+	/**
+	* @see pt.utl.ist.po.ui.Command#execute()
+	**/
+    	@Override
+    	public final void execute() throws InvalidOperation {
+		Form f = new Form(title());
+		InputString name = new InputString(f, Message.reqKey());
+		f.parse();
+
+		Display s = new Display();
+		double calories;
+		String print;
+
+		for(DishOfTheDay d : entity().getDishes()){
+			if((d.getName().compareTo(name.value()))==0){
+				calories = d.getCalories();
+				/*if(d.getFood() instanceof PreparedFood)
+					print=d.getName()+"|"+calories/100;
+				else*/
+					print=d.getName()+"|"+(int)calories;
+				s.addNewLine(print.toString());
+				s.display();
+				break;
+			}
+
+		}
+		
+		
+	}
+}

@@ -1,0 +1,61 @@
+package rest.core;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.ArrayList;
+
+import rest.core.Food;
+import rest.core.SimpleFood;
+import rest.core.Outlet;
+import java.io.*;
+
+public class PreparedFood extends Food implements Serializable{
+
+	private ArrayList<Food> _food = new ArrayList<Food>();
+	private ArrayList<Integer> _percentage = new ArrayList<Integer>();
+	private String _type;
+
+	public PreparedFood(Outlet outlet, String name, ArrayList<Food> food, ArrayList<Integer> percentage, String type){
+		super(outlet,name);
+		_food=food;
+		_percentage=percentage;
+		_type=type;
+	}
+
+	public String getType(){
+		return _type;
+	}
+
+	public ArrayList<Food> getFood(){
+		return _food;
+	}
+
+	public ArrayList<Integer> getPercentage(){
+		return _percentage;
+	}
+
+	public double getCalories(){
+		int cont = 0;
+		int index = 0;
+		double calories = 0;
+		ArrayList<Integer> percentage = getPercentage();
+		ArrayList<Food> food = getFood();
+
+		for(Food f : food){
+			calories = f.getCalories()*percentage.get(index)+calories;
+			System.out.println(calories);			
+			++index;		
+		}
+		return calories*0.01;	
+	}
+	
+
+	public String toString(){
+		return getType() + "|" + getName();
+	}
+
+	public String getDescription(){
+		return toString();
+	}
+	
+}

@@ -1,0 +1,132 @@
+package rest.core;
+
+import rest.textui.food.Message;
+import rest.core.Food;
+import rest.core.SimpleFood;
+import rest.core.PreparedFood;
+import rest.core.Outlet;
+import java.io.*;
+import java.lang.*;
+
+public class DishOfTheDay implements Serializable, Comparable{
+
+	private String _name;
+	private Food _food;
+	private int _quantity;
+	private int _price;
+	private String _class;
+	private boolean _available;
+	private int _discount;
+	private String _restaurant;
+	private boolean _discountType;
+
+
+	public DishOfTheDay(String restaurant, Food food, int quantity, int price, int discount){
+		_restaurant= restaurant;
+		_name=food.getName();
+		_food=food;
+		_quantity=quantity;
+		_price=price;
+		_available=false;
+		_discount=discount;
+		if(discount==0){
+			_discountType=false;
+		} else {
+			_discountType=true;
+		}
+		if(food instanceof PreparedFood){
+			PreparedFood pf = (PreparedFood) food;
+			if((pf.getType()).equals("VEG"))
+				_class=Message.typeVeg();
+			else
+				_class=Message.typeNoVeg();
+		} else if(food instanceof Vegetable)			
+				_class=Message.typeVeg();
+			else
+				_class=Message.typeNoVeg();
+	} 
+
+	public String getRestaurantName(){
+		return _restaurant;
+	}	
+
+	
+
+	public String getName(){
+		return _name;
+	}
+
+	public double getCalories(){
+		double calories = ((getFood().getCalories())*getQuantity());
+		return calories;
+	}
+
+	public boolean getAvailable(){
+		return _available;
+	}
+
+	public int getQuantity(){
+		return _quantity;
+	}
+
+	public int getPrice(){
+		return _price;
+	}
+
+	public Food getFood(){
+		return _food;
+	}
+	
+	public String getClasses(){
+		return _class;
+	}
+
+	public int getDiscount(){
+		return _discount;
+	}
+	public void setDiscount(int discount){
+		_discount=discount;
+	}	
+
+	public void setAvailable(boolean value){
+		_available=value;
+	}
+	public boolean getDiscountType(){
+		return _discountType;
+	}
+
+	public double getFinalPrice(int quantity){
+		double price;
+		if(getDiscountType()){
+			price = (getPrice() - getPrice()*getDiscount()*0.01);
+			System.out.println("Uni Price discoutn:"+price);			
+			price = price * quantity;
+			System.out.println("Final Price "+price);
+			return price;
+		} else {
+			price = getPrice();
+			price = price * quantity;
+			System.out.println("final price without dis "+price);
+			return price;
+			}
+	}
+	
+	public void setDiscountType(boolean value){
+		_discountType=value;
+	}
+
+
+
+	public int compareTo(Object dot){
+		DishOfTheDay dish = (DishOfTheDay)dot;
+		return _name.compareTo(dish.getName());
+	}
+
+	public String toString(){
+		if(getAvailable())
+			return getClasses() + "|" + getName() + "|" + getPrice() + "|" + getDiscount() + "|" + "AVAILABLE";
+		else
+			return getClasses() + "|" + getName() + "|" + getPrice() + "|" + getDiscount() + "|" + "UNAVAILABLE"; 
+	}
+
+}

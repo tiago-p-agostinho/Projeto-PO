@@ -1,0 +1,58 @@
+package rest.menu.manager.main;
+
+import pt.utl.ist.po.ui.Command;
+import pt.utl.ist.po.ui.Display;
+import pt.utl.ist.po.ui.Form;
+import pt.utl.ist.po.ui.InputString;
+import pt.utl.ist.po.ui.InputBoolean;
+import pt.utl.ist.po.ui.InvalidOperation;
+
+import rest.textui.manager.MenuEntry;
+import rest.textui.manager.Message;
+import rest.textui.DuplicateKeyException;
+
+
+import rest.core.Outlet;
+/**
+ * Class <code>New</code> represents a command to create a new application. The state of the previous
+ * application may be stored.
+ *
+ * @version 1.0
+ * @author PO
+ **/
+
+public class New extends Command<Outlet> {
+    /**
+     */
+    public New(Outlet o) {
+	super(false, MenuEntry.NEW, o);
+    }
+    
+    /**
+     * @see pt.utl.ist.po.ui.Command#execute()
+     **/
+    @Override
+	public final void execute() throws InvalidOperation {
+	Form f = new Form();
+	InputBoolean valor = new InputBoolean(f, Message.saveBeforeExit());
+        f.parse();
+        if (valor.value()) {
+	    Form g = new Form();
+	    InputString file = new InputString (g, Message.saveAs());
+	    g.parse();
+	    try{
+				
+		try{
+		    entity().saveAs(file.value());
+		}catch(Exception e){
+		    throw new InvalidOperation();
+		}
+	    } catch(Exception e) {
+		throw new DuplicateKeyException(file.value());
+	    }
+	}
+        entity().getClients().clear();
+        entity().getRestaurants().clear();
+        entity().getFood().clear();
+    }
+}
